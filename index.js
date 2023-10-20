@@ -46,15 +46,23 @@ app.post("/products", async (req, res) => {
   res.send(p);
 });
 
+app.get("/carts/:id", async (req, res) => {
+  const email = req.params.id;
+  const p = await db.collection(email).find({});
+  res.send(await p.toArray());
+});
+
+app.post("/carts", async (req, res) => {
+  const doc = req.body;
+  const { _id, email, ...cartData } = doc;
+  const p = await db.collection(email).insertOne(cartData);
+  res.send(p);
+});
+
 app.get("/details/:id", async (req, res) => {
   const [cname, id] = req.params.id.split("-");
   const p = await db.collection(cname).findOne({ _id: new ObjectId(id) });
   res.send(p);
-});
-
-app.delete("/delete/:id", async (req, res) => {
-  const p = await tasks.deleteOne({ _id: new ObjectId(req.params.id) });
-  res.send(JSON.stringify(p));
 });
 
 app.put("/update/:id", async (req, res) => {
@@ -62,6 +70,11 @@ app.put("/update/:id", async (req, res) => {
     { _id: new ObjectId(req.params.id) },
     { $set: req.body }
   );
+  res.send(JSON.stringify(p));
+});
+
+app.delete("/delete/:id", async (req, res) => {
+  const p = await tasks.deleteOne({ _id: new ObjectId(req.params.id) });
   res.send(JSON.stringify(p));
 });
 
