@@ -46,9 +46,10 @@ app.post("/products", async (req, res) => {
   res.send(p);
 });
 
-app.get("/view/:id", async (req, res) => {
-  const p = await tasks.findOne({ _id: new ObjectId(req.params.id) });
-  res.send(JSON.stringify(p));
+app.get("/details/:id", async (req, res) => {
+  const [cname, id] = req.params.id.split("-");
+  const p = await db.collection(cname).findOne({ _id: new ObjectId(id) });
+  res.send(p);
 });
 
 app.delete("/delete/:id", async (req, res) => {
