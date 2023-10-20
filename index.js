@@ -27,29 +27,22 @@ const client = new MongoClient(uri, {
   },
 });
 
-// async function run() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7)
-//     await client.connect();
-
-//     // Send a ping to confirm a successful connection
-//     await client.db("admin").command({ ping: 1 });
-//     console.log(
-//       "Pinged your deployment. You successfully connected to MongoDB!"
-//     );
-//   }
-// }run().catch(console.dir);
-
+const db = client.db("ThunderCars");
 const tasks = client.db("Todo").collection("Tasks");
 
 app.get("/", async (req, res) => {
-  const all_tasks = await tasks.find({});
-  res.send(JSON.stringify(await all_tasks.toArray()));
+  const all_tasks = await db.collection("Brands").find({});
+  res.send(await all_tasks.toArray());
 });
 
-app.post("/", async (req, res) => {
+app.get("/products/:id", async (req, res) => {
+  const all_tasks = await db.collection(req.params.id).find({});
+  res.send(await all_tasks.toArray());
+});
+
+app.post("/products", async (req, res) => {
   const doc = req.body;
-  const p = await tasks.insertOne(doc);
+  const p = await db.collection(doc.brand_name).insertOne(doc);
   res.send(p);
 });
 
