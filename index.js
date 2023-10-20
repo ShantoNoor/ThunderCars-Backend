@@ -59,6 +59,13 @@ app.post("/carts", async (req, res) => {
   res.send(p);
 });
 
+app.delete("/carts/:id", async (req, res) => {
+  const complexId = req.params.id;
+  const [email, id] = complexId.split("-");
+  const p = await db.collection(email).deleteOne({ _id: new ObjectId(id) });
+  res.send(p);
+});
+
 app.get("/details/:id", async (req, res) => {
   const [cname, id] = req.params.id.split("-");
   const p = await db.collection(cname).findOne({ _id: new ObjectId(id) });
