@@ -28,21 +28,32 @@ const client = new MongoClient(uri, {
 });
 
 const db = client.db("ThunderCars");
-const tasks = client.db("Todo").collection("Tasks");
 
 app.get("/", async (req, res) => {
-  const all_tasks = await db.collection("Brands").find({});
-  res.send(await all_tasks.toArray());
+  const p = await db.collection("Brands").find({});
+  res.send(await p.toArray());
 });
 
 app.get("/products/:id", async (req, res) => {
-  const all_tasks = await db.collection(req.params.id).find({});
-  res.send(await all_tasks.toArray());
+  const p = await db.collection(req.params.id).find({});
+  res.send(await p.toArray());
 });
 
 app.post("/products", async (req, res) => {
   const doc = req.body;
   const p = await db.collection(doc.brand_name).insertOne(doc);
+  res.send(p);
+});
+
+app.put("/products/:id", async (req, res) => {
+  const complexId = req.params.id;
+  const [brand_name, id] = complexId.split("-");
+  
+  const p = await db.collection(brand_name).updateOne(
+    { _id: new ObjectId(id) },
+    { $set: req.body }
+  );
+  
   res.send(p);
 });
 
@@ -54,6 +65,7 @@ app.get("/carts/:id", async (req, res) => {
 
 app.post("/carts", async (req, res) => {
   const doc = req.body;
+  // eslint-disable-next-line no-unused-vars
   const { _id, email, ...cartData } = doc;
   const p = await db.collection(email).insertOne(cartData);
   res.send(p);
@@ -70,19 +82,6 @@ app.get("/details/:id", async (req, res) => {
   const [cname, id] = req.params.id.split("-");
   const p = await db.collection(cname).findOne({ _id: new ObjectId(id) });
   res.send(p);
-});
-
-app.put("/update/:id", async (req, res) => {
-  const p = await tasks.updateOne(
-    { _id: new ObjectId(req.params.id) },
-    { $set: req.body }
-  );
-  res.send(JSON.stringify(p));
-});
-
-app.delete("/delete/:id", async (req, res) => {
-  const p = await tasks.deleteOne({ _id: new ObjectId(req.params.id) });
-  res.send(JSON.stringify(p));
 });
 
 app.listen(port, () => {
