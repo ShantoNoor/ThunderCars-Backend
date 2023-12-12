@@ -38,5 +38,5 @@
 - Lottie-React (Used on SignUp and SignIn Page to add Character Animations)
 - TailWindCSS
 
-## Project Selling line: 
+## Project in One line: 
 ### Thunder Cars is a Car shop selling different cars from different brands.
