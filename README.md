@@ -39,4 +39,4 @@
 - TailWindCSS
 
 ## Project Selling line: 
-### Thunder Car is a Car shop selling different cars from different brands.
+### Thunder Cars is a Car shop selling different cars from different brands.
